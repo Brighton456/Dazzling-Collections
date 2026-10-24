@@ -1,0 +1,1 @@
+- [Dazzling Collections sample scope](dazzling-collections-sample-scope.md) — keep the shop's demo catalog and KES pricing clearly distinguished from verified stock and live payments.

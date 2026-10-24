@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Dazzling Collections"
+description = "A sample online shop for Dazzling Collections in KV Trade Center, Kwa Vonza, Kitui, with beauty, fashion, shoes, and bags; KES pricing, a shopping cart, and WhatsApp ordering with M-Pesa instructions."
+version = "1.0.0"
+id = "artifacts/dazzling-collections"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20718
+
+[services.development]
+run = "pnpm --filter @workspace/dazzling-collections run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/dazzling-collections", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/dazzling-collections/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20718"
+BASE_PATH = "/"
