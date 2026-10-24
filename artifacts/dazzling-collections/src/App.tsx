@@ -1,51 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDown, ArrowRight, Check, ChevronDown, MapPin, Minus, Plus, Search, ShoppingBag, Sparkles, Trash2, X } from 'lucide-react';
-import beautyLipstick from '@assets/generated_images/beauty-lipstick.jpg';
-import beautySkincare from '@assets/generated_images/beauty-skincare.jpg';
-import sandals from '@assets/generated_images/shoes-sandals.jpg';
-import sneakers from '@assets/generated_images/shoes-sneakers.jpg';
-import creamBag from '@assets/generated_images/bags-cream.jpg';
-import wovenBag from '@assets/generated_images/bags-woven.jpg';
-import blouse from '@assets/generated_images/clothing-blouse.jpg';
-import dress from '@assets/generated_images/clothing-dress.jpg';
-import jewelry from '@assets/generated_images/accessories-jewelry.jpg';
-import styleAccessories from '@assets/generated_images/accessories-style.jpg';
+import { ArrowDown, ArrowRight, Check, ChevronDown, MapPin, Minus, Pause, Play, Plus, Search, ShoppingBag, Sparkles, Trash2, X } from 'lucide-react';
+import { products, type Category, type Product } from './products';
 import './index.css';
 
-type Category = 'Beauty & cosmetics' | 'Shoes' | 'Bags' | 'Clothing' | 'Accessories';
-type Product = { id: number; name: string; category: Category; price: number; description: string; image: string; label?: string };
 type CartItem = { productId: number; quantity: number };
 type Delivery = 'Pickup at shop' | 'Delivery';
 
-const products: Product[] = [
-  { id: 1, name: 'Velvet Kiss Lipstick', category: 'Beauty & cosmetics', price: 650, description: 'A creamy, comfortable lipstick with a rich colour payoff. A little everyday polish, ready for your handbag.', image: beautyLipstick, label: 'Everyday pick' },
-  { id: 2, name: 'Soft Glow Face Set', category: 'Beauty & cosmetics', price: 1450, description: 'A simple skincare and makeup edit with a fresh, dewy finish. Lovely for a quick morning routine.', image: beautySkincare, label: 'Easy routine' },
-  { id: 3, name: 'Everyday Matte Lip', category: 'Beauty & cosmetics', price: 550, description: 'A smooth, soft-matte lip colour in an easy-to-wear shade for day plans and evenings out.', image: beautyLipstick },
-  { id: 4, name: 'Glow Drop Serum', category: 'Beauty & cosmetics', price: 980, description: 'A lightweight serum-style beauty find to add a fresh, cared-for feel to your routine.', image: beautySkincare },
-  { id: 5, name: 'Lash Lift Mascara', category: 'Beauty & cosmetics', price: 720, description: 'Define and lift lashes with a buildable everyday formula that keeps your look effortless.', image: beautyLipstick },
-  { id: 6, name: 'Daily Moisture Cream', category: 'Beauty & cosmetics', price: 850, description: 'A comforting face cream for an easy, soft-skin finish. A thoughtful addition to your daily shelf.', image: beautySkincare },
-  { id: 7, name: 'Colour Pop Lip Duo', category: 'Beauty & cosmetics', price: 1100, description: 'Two complementary lip shades for a little choice, whether you are keeping it subtle or turning it up.', image: beautyLipstick },
-  { id: 8, name: 'Fresh Face Essentials', category: 'Beauty & cosmetics', price: 1750, description: 'A considered starter set of beauty staples to make getting ready feel easy and enjoyable.', image: beautySkincare, label: 'Little treat' },
-  { id: 9, name: 'Golden Hour Flats', category: 'Shoes', price: 1850, description: 'Easy slip-on flats with warm neutral straps and a little glint of detail. Made for repeat wear.', image: sandals, label: 'Easy favourite' },
-  { id: 10, name: 'Weekend Walk Sneakers', category: 'Shoes', price: 3200, description: 'A clean low-top look with a soft blush detail. An easy pair for errands, visits and long days.', image: sneakers },
-  { id: 11, name: 'Cross-Strap Sandals', category: 'Shoes', price: 1650, description: 'A simple, versatile sandal with a comfortable everyday shape and a warm, polished finish.', image: sandals },
-  { id: 12, name: 'Soft Step Trainers', category: 'Shoes', price: 2950, description: 'A fresh, light-coloured trainer to finish casual looks with a neat, comfortable feel.', image: sneakers },
-  { id: 13, name: 'Daylight Shoulder Bag', category: 'Bags', price: 2450, description: 'A structured little shoulder bag in a soft neutral tone, finished with subtle gold-colour hardware.', image: creamBag, label: 'Lovely gift' },
-  { id: 14, name: 'Market Day Woven Tote', category: 'Bags', price: 1950, description: 'A roomy woven-look tote with sturdy dark handles and a playful scarf detail for everyday outings.', image: wovenBag },
-  { id: 15, name: 'Mini Date-Night Bag', category: 'Bags', price: 2150, description: 'A compact, polished bag with just enough room for the things you like to keep close.', image: creamBag },
-  { id: 16, name: 'Sunday Carryall', category: 'Bags', price: 2250, description: 'A relaxed, generous tote with natural texture that makes a simple outfit feel considered.', image: wovenBag },
-  { id: 17, name: 'Rust Petal Blouse', category: 'Clothing', price: 1950, description: 'An easy blouse in a warm, delicate pattern. Pair with denim or dress it up for a special lunch.', image: blouse, label: 'New look' },
-  { id: 18, name: 'Teal Garden Midi', category: 'Clothing', price: 3250, description: 'A flowing midi dress in deep teal with a floral print that brings a little colour to your plans.', image: dress },
-  { id: 19, name: 'Everyday Print Top', category: 'Clothing', price: 1650, description: 'A versatile patterned top with a relaxed feel, ready to mix into the pieces you already love.', image: blouse },
-  { id: 20, name: 'After-Sunset Midi Dress', category: 'Clothing', price: 3450, description: 'A graceful printed dress for dinner plans, celebrations and any day you want to feel extra lovely.', image: dress },
-  { id: 21, name: 'Golden Hour Hoops', category: 'Accessories', price: 780, description: 'A classic pair of gold-tone hoops to bring a little brightness to your everyday look.', image: jewelry, label: 'Small detail, big mood' },
-  { id: 22, name: 'Layered Shine Necklace', category: 'Accessories', price: 950, description: 'A delicate layered necklace that makes a thoughtful finishing touch, worn alone or stacked.', image: jewelry },
-  { id: 23, name: 'Weekend Edit Sunglasses', category: 'Accessories', price: 1150, description: 'Tortoiseshell-look frames with an easy, flattering shape for sunny days and city strolls.', image: styleAccessories },
-  { id: 24, name: 'Colour Story Hair Scarf', category: 'Accessories', price: 680, description: 'A silky-feel printed scarf for your hair, handbag or neckline. A small piece with lots of personality.', image: styleAccessories },
-];
-
 const categories: Array<'All finds' | Category> = ['All finds', 'Beauty & cosmetics', 'Shoes', 'Bags', 'Clothing', 'Accessories'];
 const money = (value: number) => `KES ${value.toLocaleString('en-KE')}`;
+const motionRows = [
+  products.filter((_, index) => index % 10 === 0),
+  products.filter((_, index) => index % 10 === 5),
+];
 
 function readCart(): CartItem[] {
   try {
@@ -64,6 +30,7 @@ function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [queryFocused, setQueryFocused] = useState(false);
+  const [motionPaused, setMotionPaused] = useState(false);
   const [customer, setCustomer] = useState({ name: '', phone: '', delivery: 'Pickup at shop' as Delivery, address: '', payment: 'M-Pesa' });
   const [handoff, setHandoff] = useState('');
 
@@ -141,13 +108,32 @@ function App() {
               <p className="mt-6 text-xs font-medium text-[#766255]">A sample storefront · Prices are illustrative and subject to confirmation</p>
             </div>
             <div className="relative min-h-[270px] overflow-hidden lg:min-h-full">
-              <img src={dress} alt="Flowing teal floral dress from the clothing edit" className="absolute inset-0 size-full object-cover object-center" />
+               <img src={products.find((product) => product.category === 'Clothing')?.image} alt="Flowing teal floral dress from the clothing edit" className="absolute inset-0 size-full object-cover object-center" />
               <div className="absolute inset-0 bg-gradient-to-r from-[#f3dfca] via-[#f3dfca]/45 to-transparent lg:bg-gradient-to-r" />
               <div className="absolute bottom-6 right-6 rounded-2xl bg-[#fffaf0]/90 px-4 py-3 shadow-sm backdrop-blur">
                 <div className="serif text-lg text-[#613b2c]">The feel-good edit</div><div className="mt-1 text-xs text-[#716052]">Little finds, lots of personality</div>
               </div>
               <div className="absolute right-8 top-8 grid size-[76px] rotate-6 place-items-center rounded-full bg-[#efcd76] text-center text-[10px] font-bold uppercase leading-[1.3] tracking-[.1em] text-[#513d2c]">Local<br />finds<br /><span className="text-[9px] tracking-[.17em]">NEARBY</span></div>
             </div>
+          </div>
+        </section>
+
+        <section className="product-motion site-wrap overflow-hidden px-4 pb-14 sm:px-8 lg:px-12" aria-labelledby="motion-title">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+            <div><p className="mb-1 text-[11px] font-bold uppercase tracking-[.18em] text-[#c85034]">A quick look around</p><h2 id="motion-title" className="serif text-3xl text-[#553a2b] sm:text-4xl">The good things keep moving.</h2><p className="mt-2 text-sm text-[#766255]">A few sample finds from across the collection. Prices are illustrative.</p></div>
+            <button type="button" onClick={() => setMotionPaused((paused) => !paused)} aria-pressed={motionPaused} aria-label={motionPaused ? 'Resume product motion' : 'Pause product motion'} className="inline-flex items-center gap-2 rounded-full border border-[#d9c8b5] bg-[#fffaf3] px-4 py-2.5 text-xs font-bold text-[#245c49] transition hover:bg-[#e9efdf]" data-testid="button-toggle-product-motion">
+              {motionPaused ? <Play size={14} /> : <Pause size={14} />}{motionPaused ? 'Resume motion' : 'Pause motion'}
+            </button>
+          </div>
+          <div className={`marquee-window space-y-3 ${motionPaused ? 'is-paused' : ''}`}>
+            {motionRows.map((row, rowIndex) => <div className={`marquee-track ${rowIndex === 1 ? 'marquee-reverse' : ''}`} key={rowIndex} aria-label={`Featured sample finds row ${rowIndex + 1}`}>
+              {[0, 1].map((copy) => <div className="marquee-group" key={copy} aria-hidden={copy === 1}>
+                {row.map((product) => <button type="button" onClick={() => setSelected(product)} key={product.id} tabIndex={copy === 1 ? -1 : 0} aria-label={`View ${product.name}, ${product.category}, ${money(product.price)}`} className="marquee-card text-left" data-testid={`motion-product-${product.id}`}>
+                  <img src={product.image} alt="" loading="lazy" />
+                  <span className="marquee-copy"><span className="marquee-category">{product.category}</span><strong>{product.name}</strong><span className="marquee-detail">{product.description}</span><span className="marquee-price">{money(product.price)}</span></span>
+                </button>)}
+              </div>)}
+            </div>)}
           </div>
         </section>
 
@@ -176,7 +162,6 @@ function App() {
             {filteredProducts.map((product, index) => <article key={product.id} className="product-card group relative overflow-hidden rounded-[20px] border border-[#e5d8c8] bg-[#fffaf3] reveal" style={{ animationDelay: `${Math.min(index % 5, 4) * 45}ms` }} data-testid={`card-product-${product.id}`}>
               <button type="button" onClick={() => setSelected(product)} className="image-zoom relative block aspect-[.92] w-full overflow-hidden bg-[#ead9c9] text-left" aria-label={`View ${product.name} details`}>
                 <img src={product.image} alt={product.name} loading="lazy" className="size-full object-cover" />
-                {product.label && <span className="absolute left-3 top-3 max-w-[calc(100%-24px)] rounded-full bg-[#fff8e9]/95 px-3 py-1.5 text-[10px] font-bold text-[#245c49] shadow-sm">{product.label}</span>}
                 <span className="absolute bottom-3 right-3 grid size-9 place-items-center rounded-full bg-[#fffaf3]/95 text-[#654c3e] shadow-sm transition group-hover:bg-[#c85034] group-hover:text-white"><ArrowRight size={16} /></span>
               </button>
               <div className="p-3.5 sm:p-4">
