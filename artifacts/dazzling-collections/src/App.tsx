@@ -92,7 +92,7 @@ function App() {
       return;
     }
     if (cartProducts.length === 0) {
-      setHandoff('Your bag is empty. Add a find before placing an order.');
+      setHandoff('Your cart is empty. Add a find before placing an order.');
       return;
     }
     const lines = cartProducts.map((item) => `• ${item.product.name} × ${item.quantity} — ${money(item.product.price * item.quantity)}`).join('\n');
@@ -106,21 +106,23 @@ function App() {
       <div className="announcement px-4 py-2 text-center text-[11px] sm:text-xs">
         A little local love, right here in Kwa Vonza <span className="mx-2 opacity-60">·</span> Shop by WhatsApp
       </div>
-      <header className="site-wrap flex items-center justify-between gap-4 px-4 py-4 sm:px-8 lg:px-12">
-        <a href="#top" aria-label="Dazzling Collections home" className="flex items-center gap-3 no-underline">
-          <div className="grid size-11 place-items-center rounded-2xl bg-[#245c49] text-[#f9e8bc]"><Sparkles size={21} strokeWidth={1.8} /></div>
-          <div><div className="serif text-[21px] leading-none text-[#693826]">Dazzling</div><div className="mt-1 text-[10px] font-bold uppercase tracking-[.22em] text-[#245c49]">Collections</div></div>
-        </a>
-        <nav className="hidden items-center gap-8 text-sm font-semibold text-[#574439] md:flex" aria-label="Main navigation">
-          <a href="#shop" className="hover:text-[#c85034]">Shop all</a>
-          <a href="#categories" className="hover:text-[#c85034]">Categories</a>
-          <a href="#our-place" className="hover:text-[#c85034]">Find our shop</a>
-        </nav>
-        <div className="flex items-center gap-2">
-          <a href="https://wa.me/254716880778" target="_blank" rel="noreferrer" className="hidden rounded-full border border-[#d9c8b5] px-4 py-2.5 text-xs font-bold text-[#245c49] transition hover:bg-[#e9efdf] sm:inline-flex">WhatsApp 0716 880 778</a>
-          <button type="button" onClick={openCart} data-testid="button-open-cart" aria-label={`Open shopping bag, ${itemCount} items`} className="relative grid size-11 place-items-center rounded-full bg-[#c85034] text-white transition hover:bg-[#a9432c]"><ShoppingBag size={19} />{itemCount > 0 && <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#efcd76] text-[10px] font-bold text-[#483325]">{itemCount}</span>}</button>
-        </div>
-      </header>
+      <div className="site-header sticky top-0 z-40">
+        <header className="site-wrap flex items-center justify-between gap-4 px-4 py-4 sm:px-8 lg:px-12">
+          <a href="#top" aria-label="Dazzling Collections home" className="flex items-center gap-3 no-underline">
+            <div className="grid size-11 place-items-center rounded-2xl bg-[#245c49] text-[#f9e8bc]"><Sparkles size={21} strokeWidth={1.8} /></div>
+            <div><div className="serif text-[21px] leading-none text-[#693826]">Dazzling</div><div className="mt-1 text-[10px] font-bold uppercase tracking-[.22em] text-[#245c49]">Collections</div></div>
+          </a>
+          <nav className="hidden items-center gap-8 text-sm font-semibold text-[#574439] md:flex" aria-label="Main navigation">
+            <a href="#shop" className="hover:text-[#c85034]">Shop all</a>
+            <a href="#categories" className="hover:text-[#c85034]">Categories</a>
+            <a href="#our-place" className="hover:text-[#c85034]">Find our shop</a>
+          </nav>
+          <div className="flex items-center gap-2">
+            <a href="https://wa.me/254716880778" target="_blank" rel="noreferrer" className="hidden rounded-full border border-[#d9c8b5] px-4 py-2.5 text-xs font-bold text-[#245c49] transition hover:bg-[#e9efdf] sm:inline-flex">WhatsApp 0716 880 778</a>
+            <button type="button" onClick={openCart} data-testid="button-open-cart" aria-label={`Open cart, ${itemCount} items`} className="relative grid size-11 place-items-center rounded-full bg-[#c85034] text-white transition hover:bg-[#a9432c]"><ShoppingBag size={19} />{itemCount > 0 && <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#efcd76] text-[10px] font-bold text-[#483325]">{itemCount}</span>}</button>
+          </div>
+        </header>
+      </div>
 
       <main id="top">
         <section className="site-wrap px-4 pb-12 sm:px-8 lg:px-12">
@@ -132,7 +134,7 @@ function App() {
               <p className="mt-6 max-w-[440px] text-base leading-7 text-[#634d40] sm:text-lg">Beauty, shoes, bags and everyday style — thoughtfully gathered for life in Kwa Vonza and beyond.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href="#shop" className="inline-flex items-center gap-2 rounded-full bg-[#c85034] px-6 py-3.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#ad432e]">Browse the finds <ArrowDown size={16} /></a>
-                <button type="button" onClick={openCart} className="rounded-full border border-[#bca48c] px-6 py-3.5 text-sm font-bold text-[#613b2c] transition hover:bg-[#f9eddc]">Your shopping bag</button>
+                <button type="button" onClick={openCart} className="rounded-full border border-[#bca48c] px-6 py-3.5 text-sm font-bold text-[#613b2c] transition hover:bg-[#f9eddc]">Your cart</button>
               </div>
               <p className="mt-6 text-xs font-medium text-[#766255]">A sample storefront · Prices are illustrative and subject to confirmation</p>
             </div>
@@ -143,7 +145,12 @@ function App() {
           <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
             <div><p className="mb-1 text-[11px] font-bold uppercase tracking-[.18em] text-[#c85034]">A quick look around</p><h2 id="motion-title" className="serif text-3xl text-[#553a2b] sm:text-4xl">Fresh finds, one at a time.</h2><p className="mt-2 text-sm text-[#766255]">Each pick gets a moment in the spotlight. Sample prices are illustrative.</p></div>
             <div className="flex flex-wrap items-center gap-2">
-              <button ref={videoTriggerRef} type="button" onClick={() => setVideoOpen(true)} aria-label="Play the Dazzling Collections shop video" className="inline-flex items-center gap-2 rounded-full bg-[#245c49] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#194937]" data-testid="button-open-shop-video"><Play size={14} fill="currentColor" /> Shop video</button>
+              <button ref={videoTriggerRef} type="button" onClick={() => setVideoOpen(true)} aria-label="Play the Dazzling Collections shop video" className="video-thumb group relative shrink-0 overflow-hidden rounded-xl border border-[#dcc9b5] bg-[#241c16] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" data-testid="button-open-shop-video">
+                <img src="/media/dazzling-shop-video-poster.jpg" alt="" className="size-full object-cover" />
+                <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/5 to-black/10" />
+                <span aria-hidden="true" className="absolute left-1/2 top-1/2 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#fffaf3]/95 text-[#c85034] shadow-[0_3px_10px_rgba(20,14,10,.35)] transition group-hover:scale-110 group-hover:bg-white"><Play size={13} fill="currentColor" /></span>
+                <span className="absolute inset-x-0 bottom-1.5 text-center text-[8px] font-bold uppercase tracking-[.1em] text-white">Video</span>
+              </button>
               <a href="https://www.tiktok.com/@dazzlingcollections_kv" target="_blank" rel="noreferrer" className="px-2 py-2 text-xs font-semibold text-[#806c5c] transition hover:text-[#c85034]">More shop moments</a>
               <button type="button" onClick={() => setMotionPaused((paused) => !paused)} aria-pressed={motionPaused} aria-label={motionPaused ? 'Resume product motion' : 'Pause product motion'} className="inline-flex items-center gap-2 rounded-full border border-[#d9c8b5] bg-[#fffaf3] px-4 py-2.5 text-xs font-bold text-[#245c49] transition hover:bg-[#e9efdf]" data-testid="button-toggle-product-motion">
                 {motionPaused ? <Play size={14} /> : <Pause size={14} />}{motionPaused ? 'Resume motion' : 'Pause motion'}
@@ -190,7 +197,7 @@ function App() {
                 <button type="button" onClick={() => setSelected(product)} className="min-h-10 text-left text-[14px] font-bold leading-5 text-[#543b2d] hover:text-[#c85034] sm:text-[15px]" data-testid={`text-product-name-${product.id}`}>{product.name}</button>
                 <div className="mt-3 flex items-center justify-between gap-2">
                   <span className="text-sm font-bold text-[#245c49]">{money(product.price)}</span>
-                  <button type="button" onClick={() => addToCart(product)} aria-label={`Add ${product.name} to bag`} data-testid={`button-add-product-${product.id}`} className="grid size-9 shrink-0 place-items-center rounded-full bg-[#f2e7d8] text-[#694937] transition hover:bg-[#c85034] hover:text-white"><Plus size={17} /></button>
+                  <button type="button" onClick={() => addToCart(product)} aria-label={`Add ${product.name} to cart`} data-testid={`button-add-product-${product.id}`} className="grid size-9 shrink-0 place-items-center rounded-full bg-[#f2e7d8] text-[#694937] transition hover:bg-[#c85034] hover:text-white"><Plus size={17} /></button>
                 </div>
               </div>
             </article>)}
@@ -232,7 +239,7 @@ function App() {
             <p className="mt-4 text-sm leading-6 text-[#756154]">{selected.description}</p>
             <div className="mt-6 text-xl font-bold text-[#245c49]">{money(selected.price)}</div>
             <p className="mt-1 text-xs leading-5 text-[#8a7767]">Illustrative sample price; please confirm availability and current price with the shop.</p>
-            <button type="button" onClick={() => { addToCart(selected); setSelected(null); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#c85034] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#aa432f]"><Plus size={17} /> Add to your bag</button>
+            <button type="button" onClick={() => { addToCart(selected); setSelected(null); }} className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#c85034] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#aa432f]"><Plus size={17} /> Add to cart</button>
           </div>
         </section>
       </div>}
@@ -240,11 +247,11 @@ function App() {
       {cartOpen && <div className="fixed inset-0 z-50 bg-[#37291f]/45 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) { setCartOpen(false); setCheckoutOpen(false); } }}>
         <aside role="dialog" aria-modal="true" aria-labelledby="cart-title" className="cart-drawer ml-auto flex h-[100dvh] w-full max-w-[500px] flex-col bg-[#fffaf3] shadow-2xl">
           <div className="flex items-center justify-between border-b border-[#e8dccd] px-5 py-5 sm:px-7">
-            <div><div className="text-[10px] font-bold uppercase tracking-[.18em] text-[#c85034]">Your picks</div><h2 id="cart-title" className="serif mt-1 text-2xl text-[#543b2d]">Shopping bag <span className="text-[#927c69]">({itemCount})</span></h2></div>
-            <button type="button" onClick={() => { setCartOpen(false); setCheckoutOpen(false); }} aria-label="Close shopping bag" className="grid size-10 place-items-center rounded-full bg-[#f2e7d8] text-[#533d2e]"><X size={19} /></button>
+            <div><div className="text-[10px] font-bold uppercase tracking-[.18em] text-[#c85034]">Your picks</div><h2 id="cart-title" className="serif mt-1 text-2xl text-[#543b2d]">Cart <span className="text-[#927c69]">({itemCount})</span></h2></div>
+            <button type="button" onClick={() => { setCartOpen(false); setCheckoutOpen(false); }} aria-label="Close cart" className="grid size-10 place-items-center rounded-full bg-[#f2e7d8] text-[#533d2e]"><X size={19} /></button>
           </div>
           {cartProducts.length === 0 ? <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <div className="mb-5 grid size-20 place-items-center rounded-full bg-[#f3e6d4] text-[#245c49]"><ShoppingBag size={30} strokeWidth={1.5} /></div><h3 className="serif text-2xl text-[#543b2d]">Your bag is taking a breather.</h3><p className="mt-2 max-w-xs text-sm leading-6 text-[#766255]">Find something that feels like you, then come back here to send your order.</p><button type="button" onClick={() => setCartOpen(false)} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#245c49] px-6 py-3 text-sm font-bold text-white">Browse the finds <ArrowRight size={16} /></button>
+            <div className="mb-5 grid size-20 place-items-center rounded-full bg-[#f3e6d4] text-[#245c49]"><ShoppingBag size={30} strokeWidth={1.5} /></div><h3 className="serif text-2xl text-[#543b2d]">Your cart is empty.</h3><p className="mt-2 max-w-xs text-sm leading-6 text-[#766255]">Find something that feels like you, then come back here to send your order.</p><button type="button" onClick={() => setCartOpen(false)} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#245c49] px-6 py-3 text-sm font-bold text-white">Browse the finds <ArrowRight size={16} /></button>
           </div> : <>
             <div className="flex-1 overflow-y-auto px-5 py-3 sm:px-7">
               {cartProducts.map(({ product, quantity }) => <div key={product.id} className="flex gap-4 border-b border-[#eadfD1] py-4">
