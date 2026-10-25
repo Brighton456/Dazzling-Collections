@@ -1,14 +1,3 @@
-import beautyLipstick from '@assets/generated_images/beauty-lipstick.jpg';
-import beautySkincare from '@assets/generated_images/beauty-skincare.jpg';
-import sandals from '@assets/generated_images/shoes-sandals.jpg';
-import sneakers from '@assets/generated_images/shoes-sneakers.jpg';
-import creamBag from '@assets/generated_images/bags-cream.jpg';
-import wovenBag from '@assets/generated_images/bags-woven.jpg';
-import blouse from '@assets/generated_images/clothing-blouse.jpg';
-import dress from '@assets/generated_images/clothing-dress.jpg';
-import jewelry from '@assets/generated_images/accessories-jewelry.jpg';
-import styleAccessories from '@assets/generated_images/accessories-style.jpg';
-
 export type Category = 'Beauty & cosmetics' | 'Shoes' | 'Bags' | 'Clothing' | 'Accessories';
 export type Product = { id: number; name: string; category: Category; price: number; description: string; image: string };
 
@@ -67,6 +56,11 @@ const catalog: Record<Category, ProductSeed[]> = {
     { name: 'Campus Break Sandals', price: 1580, description: 'Simple sandals for the walk between class, library and a tea break.' },
     { name: 'Market Lane T-Bar Flats', price: 2250, description: 'A classic T-bar outline that lends a little character to everyday looks.' },
     { name: 'Golden Acacia Sneakers', price: 3250, description: 'A neutral low-top palette inspired by dry-season acacia country.' },
+    { name: 'Kikoy Knot Slides', price: 1690, description: 'Easy slip-ons with a bright woven-look strap for warm Kwa Vonza afternoons.' },
+    { name: 'Acacia Trail Trainers', price: 3650, description: 'A sporty everyday pair for town errands, campus paths and weekend walks.' },
+    { name: 'Maua Block-Heel Sandals', price: 2950, description: 'A floral-toned dress sandal with a steady block heel for celebrations.' },
+    { name: 'Town Centre Ballet Flats', price: 2150, description: 'A neat rounded flat for workdays, shopping and comfortable town strolls.' },
+    { name: 'Kitui Evening Mules', price: 2480, description: 'A polished open-back pair for dinner plans and special evenings out.' },
   ],
   Bags: [
     { name: 'Daylight Shoulder Bag', price: 2450, description: 'A structured neutral shoulder shape with understated gold-colour details.' },
@@ -84,6 +78,11 @@ const catalog: Record<Category, ProductSeed[]> = {
     { name: 'Coastline Woven Shopper', price: 2350, description: 'A woven-look shopper with an easygoing feel for sunny-day plans.' },
     { name: 'Study Break Mini Bag', price: 1980, description: 'A compact bag to take the small essentials on a campus coffee break.' },
     { name: 'Golden Hour Satchel', price: 2790, description: 'A warm neutral satchel-style piece with a classic, tidy outline.' },
+    { name: 'Kikoy Market Shopper', price: 2190, description: 'A cheerful shopper shape with a colourful stripe-inspired accent.' },
+    { name: 'Kwa Vonza Mini Backpack', price: 2690, description: 'A hands-free mini carryall for light days out and quick errands.' },
+    { name: 'Nairobi Workday Tote', price: 3450, description: 'A structured tote silhouette for notebooks, a water bottle and daily essentials.' },
+    { name: 'Sunset Bead Clutch', price: 1890, description: 'A compact evening bag with a warm, decorative finish for celebrations.' },
+    { name: 'Acacia Crescent Crossbody', price: 2590, description: 'A curved crossbody profile in an earthy palette for everyday plans.' },
   ],
   Clothing: [
     { name: 'Rust Petal Blouse', price: 1950, description: 'A warm patterned blouse for denim days or a special lunch in town.' },
@@ -111,6 +110,11 @@ const catalog: Record<Category, ProductSeed[]> = {
     { name: 'Campus Day Pleated Top', price: 1890, description: 'A little pleat detail lends movement to this everyday campus-ready top.' },
     { name: 'Kitui Acacia Print Blouse', price: 2180, description: 'A delicate print nods to acacia silhouettes across the Kitui landscape.' },
     { name: 'Nairobi Weekend Jumpsuit', price: 3420, description: 'A one-piece outfit idea for weekend plans that call for easy style.' },
+    { name: 'Kikoy Stripe Wrap Skirt', price: 2290, description: 'A swishy wrap silhouette with bold stripe-inspired colour for sunny days.' },
+    { name: 'Kwa Vonza Linen-Feel Shirt', price: 2450, description: 'A relaxed button-up look for warm afternoons and easy layering.' },
+    { name: 'Market Lane Floral Co-ord', price: 3850, description: 'A matching top-and-trouser outfit for a pulled-together weekend look.' },
+    { name: 'Kitui Morning Maxi', price: 3590, description: 'A long, easy dress with a bright print for family visits and day plans.' },
+    { name: 'Soko Square-Neck Top', price: 1780, description: 'A clean neckline and lively print make this an easy wardrobe refresh.' },
   ],
   Accessories: [
     { name: 'Golden Hour Hoops', price: 780, description: 'Classic gold-tone hoops bring a little brightness to everyday outfits.' },
@@ -123,23 +127,53 @@ const catalog: Record<Category, ProductSeed[]> = {
     { name: 'Market Day Belt', price: 990, description: 'A warm-toned belt detail to bring definition to a dress or loose shirt.' },
     { name: 'Kwa Vonza Charm Bracelet', price: 840, description: 'A delicate bracelet idea for adding a quiet glint to your wrist.' },
     { name: 'Golden Acacia Hair Clip', price: 540, description: 'A simple golden-toned clip for a quick, tidy finish on busy mornings.' },
+    { name: 'Maua Beaded Anklet', price: 620, description: 'A light beaded accent for sandals and relaxed warm-weather outfits.' },
+    { name: 'Kikoy Knot Hair Scarf', price: 760, description: 'A colourful scarf tie for a ponytail, bun or handbag handle.' },
+    { name: 'Soko Slim Everyday Watch', price: 1450, description: 'A simple wristwatch silhouette to finish a workday or campus look.' },
+    { name: 'Kitui Sun-Day Bucket Hat', price: 1190, description: 'A relaxed hat shape for sunny market strolls and outdoor plans.' },
+    { name: 'Coastal Pearl Drop Earrings', price: 890, description: 'A soft pearl-look drop adds a little polish to daytime and evening wear.' },
+    { name: 'Kwa Vonza Colour Bead Set', price: 580, description: 'A bright bracelet pair inspired by the colour and bustle of local markets.' },
+    { name: 'Nairobi Mini Card Wallet', price: 980, description: 'A compact card holder to slip into a crossbody or small handbag.' },
+    { name: 'Mombasa Shell Pendant', price: 1050, description: 'A delicate shell-shaped pendant with an easy coastal-inspired feel.' },
+    { name: 'Market Day Woven Belt', price: 1120, description: 'A textured belt detail to define a dress, skirt or relaxed shirt.' },
+    { name: 'Golden Hour Hair Bow', price: 490, description: 'A small bow clip for a quick pop of colour on busy mornings.' },
   ],
 };
 
-const images: Record<Category, string[]> = {
-  'Beauty & cosmetics': [beautyLipstick, beautySkincare],
-  Shoes: [sandals, sneakers],
-  Bags: [creamBag, wovenBag],
-  Clothing: [blouse, dress],
-  Accessories: [jewelry, styleAccessories],
+const categoryImageIndex: Record<Category, number> = {
+  'Beauty & cosmetics': 0,
+  Shoes: 0,
+  Bags: 0,
+  Clothing: 0,
+  Accessories: 0,
 };
+const originalCategorySizes: Record<Category, number> = {
+  'Beauty & cosmetics': 30,
+  Shoes: 20,
+  Bags: 15,
+  Clothing: 25,
+  Accessories: 10,
+};
+const originalFirstIds: Record<Category, number> = {
+  'Beauty & cosmetics': 1,
+  Shoes: 31,
+  Bags: 51,
+  Clothing: 66,
+  Accessories: 91,
+};
+let nextAdditionalId = 101;
 
-let nextId = 1;
 export const products: Product[] = (Object.entries(catalog) as [Category, ProductSeed[]][]).flatMap(([category, items]) =>
-  items.map((item, index) => ({
-    id: nextId++,
-    ...item,
-    category,
-    image: images[category][index % images[category].length],
-  })),
+  items.map((item) => {
+    const imageIndex = ++categoryImageIndex[category];
+    const imageName = category === 'Beauty & cosmetics' ? 'beauty' : category.toLowerCase();
+    return {
+      id: imageIndex <= originalCategorySizes[category]
+        ? originalFirstIds[category] + imageIndex - 1
+        : nextAdditionalId++,
+      ...item,
+      category,
+      image: `/products/${imageName}-${String(imageIndex).padStart(2, '0')}.jpg`,
+    };
+  }),
 );

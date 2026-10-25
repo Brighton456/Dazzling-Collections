@@ -8,10 +8,11 @@ type Delivery = 'Pickup at shop' | 'Delivery';
 
 const categories: Array<'All finds' | Category> = ['All finds', 'Beauty & cosmetics', 'Shoes', 'Bags', 'Clothing', 'Accessories'];
 const money = (value: number) => `KES ${value.toLocaleString('en-KE')}`;
-const motionRows = [
-  products.filter((_, index) => index % 10 === 0),
-  products.filter((_, index) => index % 10 === 5),
-];
+const productsByCategory = categories.slice(1).map((item) => products.filter((product) => product.category === item));
+const motionProducts = Array.from(
+  { length: Math.max(...productsByCategory.map((group) => group.length)) },
+  (_, index) => productsByCategory.flatMap((group) => group[index] ? [group[index]] : []),
+).flat();
 
 function readCart(): CartItem[] {
   try {
@@ -31,12 +32,22 @@ function App() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [queryFocused, setQueryFocused] = useState(false);
   const [motionPaused, setMotionPaused] = useState(false);
+  const [motionFocused, setMotionFocused] = useState(false);
+  const [motionIndex, setMotionIndex] = useState(0);
   const [customer, setCustomer] = useState({ name: '', phone: '', delivery: 'Pickup at shop' as Delivery, address: '', payment: 'M-Pesa' });
   const [handoff, setHandoff] = useState('');
 
   useEffect(() => {
     localStorage.setItem('dazzling-cart-v1', JSON.stringify(cart));
   }, [cart]);
+
+  useEffect(() => {
+    if (motionPaused || motionFocused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => {
+      setMotionIndex((index) => (index + 1) % motionProducts.length);
+    }, 2500);
+    return () => window.clearInterval(timer);
+  }, [motionPaused, motionFocused]);
 
   const filteredProducts = useMemo(() => products.filter((product) => {
     const matchesCategory = category === 'All finds' || product.category === category;
@@ -96,44 +107,58 @@ function App() {
 
       <main id="top">
         <section className="site-wrap px-4 pb-12 sm:px-8 lg:px-12">
-          <div className="hero-surface relative grid min-h-[430px] overflow-hidden rounded-[30px] lg:min-h-[480px] lg:grid-cols-[1.06fr_.94fr]">
+          <div className="hero-surface hero-campaign relative grid min-h-[500px] overflow-hidden rounded-[30px] lg:min-h-[480px] lg:grid-cols-[1.06fr_.94fr]">
+            <div className="hero-art" aria-hidden="true"><img src="/dazzling-kv-campaign.png" alt="" /><span className="hero-art-glow" /></div>
             <div className="relative z-10 flex flex-col items-start justify-center px-7 py-12 sm:px-12 lg:px-[4.5rem]">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-[#fff8e9] px-3 py-2 text-[11px] font-bold uppercase tracking-[.15em] text-[#245c49]"><span className="size-2 rounded-full bg-[#c85034]" /> Your neighbourhood style stop</div>
-              <h1 className="serif max-w-[610px] text-[clamp(3.5rem,7.2vw,6.6rem)] leading-[.94] tracking-[-.055em] text-[#613b2c]">Find your<br /><span className="text-[#c85034]">little dazzle.</span></h1>
-              <p className="mt-6 max-w-[420px] text-base leading-7 text-[#634d40] sm:text-lg">Beauty treats, good shoes and finishing touches for the everyday moments that deserve a little extra.</p>
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-[#fff8e9]/90 px-3 py-2 text-[11px] font-bold uppercase tracking-[.15em] text-[#245c49] shadow-sm backdrop-blur"><span className="size-2 rounded-full bg-[#c85034]" /> Dazzling Collections · Kwa Vonza, Kitui</div>
+              <h1 className="serif max-w-[610px] text-[clamp(3.3rem,7vw,6rem)] leading-[.94] tracking-[-.055em] text-[#613b2c]">A little style.<br /><span className="text-[#c85034]">A lot of dazzle.</span></h1>
+              <p className="mt-6 max-w-[440px] text-base leading-7 text-[#634d40] sm:text-lg">Beauty, shoes, bags and everyday style — thoughtfully gathered for life in Kwa Vonza and beyond.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href="#shop" className="inline-flex items-center gap-2 rounded-full bg-[#c85034] px-6 py-3.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#ad432e]">Browse the finds <ArrowDown size={16} /></a>
                 <button type="button" onClick={openCart} className="rounded-full border border-[#bca48c] px-6 py-3.5 text-sm font-bold text-[#613b2c] transition hover:bg-[#f9eddc]">Your shopping bag</button>
               </div>
               <p className="mt-6 text-xs font-medium text-[#766255]">A sample storefront · Prices are illustrative and subject to confirmation</p>
             </div>
-            <div className="relative min-h-[270px] overflow-hidden lg:min-h-full">
-               <img src={products.find((product) => product.category === 'Clothing')?.image} alt="Flowing teal floral dress from the clothing edit" className="absolute inset-0 size-full object-cover object-center" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f3dfca] via-[#f3dfca]/45 to-transparent lg:bg-gradient-to-r" />
-              <div className="absolute bottom-6 right-6 rounded-2xl bg-[#fffaf0]/90 px-4 py-3 shadow-sm backdrop-blur">
-                <div className="serif text-lg text-[#613b2c]">The feel-good edit</div><div className="mt-1 text-xs text-[#716052]">Little finds, lots of personality</div>
-              </div>
-              <div className="absolute right-8 top-8 grid size-[76px] rotate-6 place-items-center rounded-full bg-[#efcd76] text-center text-[10px] font-bold uppercase leading-[1.3] tracking-[.1em] text-[#513d2c]">Local<br />finds<br /><span className="text-[9px] tracking-[.17em]">NEARBY</span></div>
-            </div>
           </div>
         </section>
 
         <section className="product-motion site-wrap overflow-hidden px-4 pb-14 sm:px-8 lg:px-12" aria-labelledby="motion-title">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
-            <div><p className="mb-1 text-[11px] font-bold uppercase tracking-[.18em] text-[#c85034]">A quick look around</p><h2 id="motion-title" className="serif text-3xl text-[#553a2b] sm:text-4xl">The good things keep moving.</h2><p className="mt-2 text-sm text-[#766255]">A few sample finds from across the collection. Prices are illustrative.</p></div>
+            <div><p className="mb-1 text-[11px] font-bold uppercase tracking-[.18em] text-[#c85034]">A quick look around</p><h2 id="motion-title" className="serif text-3xl text-[#553a2b] sm:text-4xl">Fresh finds, one at a time.</h2><p className="mt-2 text-sm text-[#766255]">Each pick gets a moment in the spotlight. Sample prices are illustrative.</p></div>
             <button type="button" onClick={() => setMotionPaused((paused) => !paused)} aria-pressed={motionPaused} aria-label={motionPaused ? 'Resume product motion' : 'Pause product motion'} className="inline-flex items-center gap-2 rounded-full border border-[#d9c8b5] bg-[#fffaf3] px-4 py-2.5 text-xs font-bold text-[#245c49] transition hover:bg-[#e9efdf]" data-testid="button-toggle-product-motion">
               {motionPaused ? <Play size={14} /> : <Pause size={14} />}{motionPaused ? 'Resume motion' : 'Pause motion'}
             </button>
           </div>
-          <div className={`marquee-window space-y-3 ${motionPaused ? 'is-paused' : ''}`}>
-            {motionRows.map((row, rowIndex) => <div className={`marquee-track ${rowIndex === 1 ? 'marquee-reverse' : ''}`} key={rowIndex} aria-label={`Featured sample finds row ${rowIndex + 1}`}>
-              {[0, 1].map((copy) => <div className="marquee-group" key={copy} aria-hidden={copy === 1}>
-                {row.map((product) => <button type="button" onClick={() => setSelected(product)} key={product.id} tabIndex={copy === 1 ? -1 : 0} aria-label={`View ${product.name}, ${product.category}, ${money(product.price)}`} className="marquee-card text-left" data-testid={`motion-product-${product.id}`}>
-                  <img src={product.image} alt="" loading="lazy" />
-                  <span className="marquee-copy"><span className="marquee-category">{product.category}</span><strong>{product.name}</strong><span className="marquee-detail">{product.description}</span><span className="marquee-price">{money(product.price)}</span></span>
-                </button>)}
-              </div>)}
-            </div>)}
+          <div className={`motion-window ${motionPaused ? 'is-paused' : ''}`}>
+            <button type="button" onClick={() => setSelected(motionProducts[motionIndex])} onFocus={() => setMotionFocused(true)} onBlur={() => setMotionFocused(false)} key={motionProducts[motionIndex].id} aria-label={`View ${motionProducts[motionIndex].name}, ${motionProducts[motionIndex].category}, ${money(motionProducts[motionIndex].price)}`} className="marquee-card motion-card text-left" data-testid={`motion-product-${motionProducts[motionIndex].id}`}>
+              <img src={motionProducts[motionIndex].image} alt="" />
+              <span className="marquee-copy"><span className="marquee-category">{motionProducts[motionIndex].category}</span><strong>{motionProducts[motionIndex].name}</strong><span className="marquee-detail">{motionProducts[motionIndex].description}</span><span className="marquee-price">{money(motionProducts[motionIndex].price)}</span></span>
+            </button>
+          </div>
+        </section>
+
+        <section id="tiktok" className="site-wrap px-4 pb-14 sm:px-8 lg:px-12" aria-labelledby="tiktok-title">
+          <div className="tiktok-feature overflow-hidden rounded-[28px] text-[#fff8e9]">
+            <div className="grid items-center gap-8 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1fr_300px] lg:px-14">
+              <div>
+                <p className="mb-3 text-[11px] font-bold uppercase tracking-[.2em] text-[#efcd76]">A little shop-window peek</p>
+                <h2 id="tiktok-title" className="serif max-w-xl text-3xl leading-tight sm:text-4xl">See Dazzling Collections in Kwa Vonza.</h2>
+                <p className="mt-4 max-w-lg text-sm leading-6 text-[#f0e4d1]">Take a closer look at the shop, the styles and the people behind the finds. Follow along for more from KV Trade Center.</p>
+                <a href="https://www.tiktok.com/@dazzlingcollections_kv" target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#efcd76] px-5 py-3 text-sm font-bold text-[#49372a] transition hover:-translate-y-0.5 hover:bg-[#f6d98e]">Follow @dazzlingcollections_kv <ArrowRight size={16} /></a>
+              </div>
+              <div className="mx-auto w-full max-w-[260px]">
+                <div className="tiktok-video-shell overflow-hidden rounded-[22px] bg-black shadow-2xl">
+                  <iframe
+                    title="Dazzling Collections on TikTok"
+                    src="https://www.tiktok.com/player/v1/7631185438530751765?music_info=1&description=1"
+                    loading="lazy"
+                    allow="encrypted-media; fullscreen; picture-in-picture"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                  />
+                </div>
+                <a href="https://www.tiktok.com/@dazzlingcollections_kv/video/7631185438530751765" target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-[#f2e5cf] transition hover:text-[#efcd76]">Open this video on TikTok <ArrowRight size={14} /></a>
+              </div>
+            </div>
           </div>
         </section>
 

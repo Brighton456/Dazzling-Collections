@@ -9,6 +9,8 @@ The user requested a sample storefront. Its generated product descriptions, phot
 
 The user also asked the catalog and presentation to embrace Kenyan context. Product naming and copy can reference Kenyan everyday settings and style influences such as Kitui, Kwa Vonza, kitenge-inspired patterns, and kikoy styles, without implying that sample products are locally made or actually stocked.
 
+TikTok embeds may load the player but fail to play media in the Replit preview because TikTok's video CDN returns 403 or serves a codec the preview browser cannot decode. Keep a direct link to the exact post beside any embed.
+
 **Why:** The user asked for an e-commerce-style sample and did not provide a verified stock list, current prices, or live merchant payment setup.
 
-**How to apply:** Keep the demo clearly labeled as illustrative until the shop provides approved catalog details. Use Kenyan context respectfully in sample copy, and confirm M-Pesa instructions with the merchant through WhatsApp unless a real payment integration is explicitly set up.
+**How to apply:** Keep the demo clearly labeled as illustrative until the shop provides approved catalog details. Use Kenyan context respectfully in sample copy, confirm M-Pesa instructions with the merchant through WhatsApp unless a real payment integration is explicitly set up, and give embedded TikTok content a direct-post fallback link.
