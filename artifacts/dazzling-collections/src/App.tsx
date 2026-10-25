@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowRight, Check, ChevronDown, MapPin, Minus, Pause, Play, Plus, Search, ShoppingBag, Sparkles, Trash2, X } from 'lucide-react';
 import { products, type Category, type Product } from './products';
 import './index.css';
@@ -34,6 +34,9 @@ function App() {
   const [motionPaused, setMotionPaused] = useState(false);
   const [motionFocused, setMotionFocused] = useState(false);
   const [motionIndex, setMotionIndex] = useState(0);
+  const [videoOpen, setVideoOpen] = useState(false);
+  const videoTriggerRef = useRef<HTMLButtonElement>(null);
+  const videoWasOpen = useRef(false);
   const [customer, setCustomer] = useState({ name: '', phone: '', delivery: 'Pickup at shop' as Delivery, address: '', payment: 'M-Pesa' });
   const [handoff, setHandoff] = useState('');
 
@@ -48,6 +51,20 @@ function App() {
     }, 2500);
     return () => window.clearInterval(timer);
   }, [motionPaused, motionFocused]);
+
+  useEffect(() => {
+    if (!videoOpen) {
+      if (videoWasOpen.current) videoTriggerRef.current?.focus();
+      videoWasOpen.current = false;
+      return;
+    }
+    videoWasOpen.current = true;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setVideoOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [videoOpen]);
 
   const filteredProducts = useMemo(() => products.filter((product) => {
     const matchesCategory = category === 'All finds' || product.category === category;
@@ -125,40 +142,19 @@ function App() {
         <section className="product-motion site-wrap overflow-hidden px-4 pb-14 sm:px-8 lg:px-12" aria-labelledby="motion-title">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
             <div><p className="mb-1 text-[11px] font-bold uppercase tracking-[.18em] text-[#c85034]">A quick look around</p><h2 id="motion-title" className="serif text-3xl text-[#553a2b] sm:text-4xl">Fresh finds, one at a time.</h2><p className="mt-2 text-sm text-[#766255]">Each pick gets a moment in the spotlight. Sample prices are illustrative.</p></div>
-            <button type="button" onClick={() => setMotionPaused((paused) => !paused)} aria-pressed={motionPaused} aria-label={motionPaused ? 'Resume product motion' : 'Pause product motion'} className="inline-flex items-center gap-2 rounded-full border border-[#d9c8b5] bg-[#fffaf3] px-4 py-2.5 text-xs font-bold text-[#245c49] transition hover:bg-[#e9efdf]" data-testid="button-toggle-product-motion">
-              {motionPaused ? <Play size={14} /> : <Pause size={14} />}{motionPaused ? 'Resume motion' : 'Pause motion'}
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button ref={videoTriggerRef} type="button" onClick={() => setVideoOpen(true)} aria-label="Play the Dazzling Collections shop video" className="inline-flex items-center gap-2 rounded-full bg-[#245c49] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#194937]" data-testid="button-open-shop-video"><Play size={14} fill="currentColor" /> Shop video</button>
+              <a href="https://www.tiktok.com/@dazzlingcollections_kv" target="_blank" rel="noreferrer" className="px-2 py-2 text-xs font-semibold text-[#806c5c] transition hover:text-[#c85034]">More shop moments</a>
+              <button type="button" onClick={() => setMotionPaused((paused) => !paused)} aria-pressed={motionPaused} aria-label={motionPaused ? 'Resume product motion' : 'Pause product motion'} className="inline-flex items-center gap-2 rounded-full border border-[#d9c8b5] bg-[#fffaf3] px-4 py-2.5 text-xs font-bold text-[#245c49] transition hover:bg-[#e9efdf]" data-testid="button-toggle-product-motion">
+                {motionPaused ? <Play size={14} /> : <Pause size={14} />}{motionPaused ? 'Resume motion' : 'Pause motion'}
+              </button>
+            </div>
           </div>
           <div className={`motion-window ${motionPaused ? 'is-paused' : ''}`}>
             <button type="button" onClick={() => setSelected(motionProducts[motionIndex])} onFocus={() => setMotionFocused(true)} onBlur={() => setMotionFocused(false)} key={motionProducts[motionIndex].id} aria-label={`View ${motionProducts[motionIndex].name}, ${motionProducts[motionIndex].category}, ${money(motionProducts[motionIndex].price)}`} className="marquee-card motion-card text-left" data-testid={`motion-product-${motionProducts[motionIndex].id}`}>
               <img src={motionProducts[motionIndex].image} alt="" />
               <span className="marquee-copy"><span className="marquee-category">{motionProducts[motionIndex].category}</span><strong>{motionProducts[motionIndex].name}</strong><span className="marquee-detail">{motionProducts[motionIndex].description}</span><span className="marquee-price">{money(motionProducts[motionIndex].price)}</span></span>
             </button>
-          </div>
-        </section>
-
-        <section id="tiktok" className="site-wrap px-4 pb-14 sm:px-8 lg:px-12" aria-labelledby="tiktok-title">
-          <div className="tiktok-feature overflow-hidden rounded-[28px] text-[#fff8e9]">
-            <div className="grid items-center gap-8 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1fr_300px] lg:px-14">
-              <div>
-                <p className="mb-3 text-[11px] font-bold uppercase tracking-[.2em] text-[#efcd76]">A little shop-window peek</p>
-                <h2 id="tiktok-title" className="serif max-w-xl text-3xl leading-tight sm:text-4xl">See Dazzling Collections in Kwa Vonza.</h2>
-                <p className="mt-4 max-w-lg text-sm leading-6 text-[#f0e4d1]">Take a closer look at the shop, the styles and the people behind the finds. Follow along for more from KV Trade Center.</p>
-                <a href="https://www.tiktok.com/@dazzlingcollections_kv" target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#efcd76] px-5 py-3 text-sm font-bold text-[#49372a] transition hover:-translate-y-0.5 hover:bg-[#f6d98e]">Follow @dazzlingcollections_kv <ArrowRight size={16} /></a>
-              </div>
-              <div className="mx-auto w-full max-w-[260px]">
-                <div className="tiktok-video-shell overflow-hidden rounded-[22px] bg-black shadow-2xl">
-                  <iframe
-                    title="Dazzling Collections on TikTok"
-                    src="https://www.tiktok.com/player/v1/7631185438530751765?music_info=1&description=1"
-                    loading="lazy"
-                    allow="encrypted-media; fullscreen; picture-in-picture"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                  />
-                </div>
-                <a href="https://www.tiktok.com/@dazzlingcollections_kv/video/7631185438530751765" target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-[#f2e5cf] transition hover:text-[#efcd76]">Open this video on TikTok <ArrowRight size={14} /></a>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -213,6 +209,18 @@ function App() {
         <div><span className="serif text-lg text-[#613b2c]">Dazzling Collections</span><div className="mt-1 flex items-center gap-1"><MapPin size={13} /> KV Trade Center - Kwa Vonza, Kitui</div></div>
         <div className="max-w-xl sm:text-right">Sample storefront with illustrative prices, not verified inventory or pricing. Please confirm all details with the shop on WhatsApp.</div>
       </footer>
+
+      {videoOpen && <div className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-[#17120f]/85 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setVideoOpen(false); }}>
+        <section role="dialog" aria-modal="true" aria-labelledby="shop-video-title" className="relative flex max-h-[92dvh] flex-col items-center gap-3 rounded-[24px] p-2 sm:p-3">
+          <button type="button" onClick={() => setVideoOpen(false)} aria-label="Close shop video" autoFocus className="absolute right-4 top-4 z-10 grid size-10 place-items-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-black/80"><X size={20} /></button>
+          <h2 id="shop-video-title" className="sr-only">A little look inside Dazzling Collections</h2>
+          <video className="shop-video-player shadow-2xl" controls autoPlay playsInline preload="metadata" poster="/media/dazzling-shop-video-poster.jpg">
+            <source src="/media/dazzling-shop-video.mp4" type="video/mp4" />
+            Your browser does not support embedded video.
+          </video>
+          <p className="text-center text-xs font-medium tracking-wide text-[#fff8e9]">Dazzling Collections · KV Trade Center, Kwa Vonza</p>
+        </section>
+      </div>}
 
       {selected && <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#37291f]/55 p-4 backdrop-blur-[3px]" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelected(null); }}>
         <section role="dialog" aria-modal="true" aria-labelledby="product-dialog-title" className="relative grid w-full max-w-3xl overflow-hidden rounded-[26px] bg-[#fffaf3] shadow-2xl sm:grid-cols-2">
